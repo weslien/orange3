@@ -1,5 +1,5 @@
 from collections import OrderedDict
-import pkg_resources
+import importlib.resources
 
 import numpy
 
@@ -738,9 +738,12 @@ class RandomFeatureSelectEditor(BaseEditor):
 
     def __repr__(self):
         if self.__strategy == self.Fixed:
-            return f"select {self.__k} {pl(self.__k,'feature')}"
+            # private attributes may not appear translated strings
+            num = self.__k
+            return f"select {num} {pl(num,'feature')}"
         else:
-            return f"select {self.__p} % features"
+            perc = self.__p
+            return f"select {perc} % features"
 
 
 def index_to_enum(enum, i):
@@ -993,7 +996,8 @@ class PreprocessAction:
 
 
 def icon_path(basename):
-    return pkg_resources.resource_filename(__name__, "icons/" + basename)
+    path = importlib.resources.files(__package__).joinpath("icons/" + basename)
+    return str(path)
 
 
 PREPROCESS_ACTIONS = [
